@@ -1,7 +1,7 @@
 {
   "name": "Enquetes",
   "description": "Enquetes for favorite foods.",
-  "repository": "https://github.com/progedu/node-js-http-3016",
+  "repository": "https://github.com/aozametatuki/node-js-http",
   "logo": "",
   "keywords": ["node"],
   "image": "heroku/nodejs"

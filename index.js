@@ -76,7 +76,7 @@ const server = http.createServer((req, res) => {
 });
 
 // httpが起動するポートを設定
-const port = 8000;
+const port = process.env.PORT || 8000;
 // サーバーを起動
 server.listen(port, () => {
 	// ログを出力

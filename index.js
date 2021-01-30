@@ -4,17 +4,35 @@
 const http = require('http');
 // pugのモジュールを読み込む
 const pug = require('pug');
+// Basic認証のモジュールを読み込む
+const auth = require('http-auth');
+// Basic認証の設定
+const basic = auth.basic(
+    {realm: 'Enquetes Area.'}, 
+    (username, password, callback) => {
+        callback(username == 'guest' && password == 'xaXZJQmE');
+    }
+);
 
 // サーバーを作成
-const server = http.createServer((req, res) => {
+const server = http.createServer(basic, (req, res) => {
     // ログを出力
-    const now = new Date();
-    // console.info(`[ ${now} ] Requested by ${req.connection.remoteAddress}`);
     console.info(`Requested by ${req.connection.remoteAddress}`);
+
+    // ログアウトの場合の処理
+    if(req.url === '/logout'){
+        res.writeHead(401, {
+            'Content-Type' : 'text/plain; charset=utf-8'
+        });
+        res.end('ログアウトされました');
+        return;
+    }
+
     // レスポンスヘッダ
     res.writeHead(200, {
         'Content-Type' : 'text/html; charset=utf-8'
     });
+
     // レスポンスの内容
     switch(req.method){
         // GETメソッドの場合
@@ -55,7 +73,6 @@ const server = http.createServer((req, res) => {
             }).on('end', () => {
                 // rawDataをデコードする
                 const decoded = decodeURIComponent(rawData);
-                // console.log(`[${now}] 投稿: ${decoded}`);
                 console.log(`投稿: ${decoded}`);
                 // 投稿内容を表示する
                 res.write(`<!DOCTYPE html><html lang="ja"><body><h1>${decoded}が投稿されました。</h1></body></html>`);
@@ -71,11 +88,9 @@ const server = http.createServer((req, res) => {
     }
 // サーバエラーのエラーログを出力
 }).on('error', (e) => {
-    // console.error(`[ ${new Date()} ] Server Error`, e);
     console.error(`Server Error`, e);
 // クライアントエラーのエラーログを出力
 }).on('clientError', (e) => {
-    // console.error(`[ ${new Date()} ] client Error`, e);
     console.error(`client Error`, e);
 });
 
@@ -84,6 +99,5 @@ const port = process.env.PORT || 8000;
 // サーバーを起動
 server.listen(port, () => {
 	// ログを出力
-    // console.info(`[ ${new Date()} ] Listening on ${port}`);
     console.info(`Listening on ${port}`);
 });

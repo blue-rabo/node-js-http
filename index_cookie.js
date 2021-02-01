@@ -7,7 +7,7 @@ const server = http.createServer((req, res) => {
   // 現在時間を取得
   const now = Date.now();
   // Cookieに情報を設定
-  res.setHeader('Set-Cookie', `last_access=${now};`);
+  res.setHeader('Set-Cookie', `last_access=${now};expires=Mon, 07 Jan 2036 00:00:00 GMT;`);
   // レクエスト情報をヘッダーのcookieから最終アクセス時刻を取得
   const last_access_time = req.headers.cookie ? parseInt(req.headers.cookie.split('last_access=')[1]) : now;
   // 最終アクセス時刻を文字列に変換したものを出力
